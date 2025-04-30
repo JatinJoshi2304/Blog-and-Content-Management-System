@@ -46,8 +46,16 @@ export const getUserByUsername = async (req: Request, res: any) => {
   }
 };
 
-export const getAllUsers = async (_req: Request, res: Response) => {
+export const getAllUsers = async (req: Request, res: Response) => {
   try {
+    const role = (req as any).user.role;
+
+    if (role !== "admin")
+      return res.status(status.UNAUTHORIZED).json({
+        success: false,
+        message: errorMessage.General.UNAUTHORIZED,
+      });
+
     const users = await userService.getAllUsers();
     res
       .status(status.SUCCESS)
@@ -66,14 +74,42 @@ export const updateUser = async (req: Request, res: Response) => {
     const id = (req as any).user.id;
     const updatedData = { ...req.body };
     const user = await userService.updateUser(id, updatedData);
-    if (req.file) {
-      updatedData.avatar = `/uploads/avatars/${req.file.filename}`;
-    }
     res
       .status(status.SUCCESS)
       .json({ success: true, data: user, message: userMessage.UPDATE_SUCCESS });
   } catch (error: any) {
     res.status(status.BAD_REQUEST).json({
+      success: false,
+      error: error.message,
+      message: errorMessage.General.UNKNOWN_ERROR,
+    });
+  }
+};
+
+export const updateProfilePic = async (req: Request, res: any) => {
+  try {
+    const id = (req as any).user.id;
+
+    if (!req.file) {
+      return res.status(status.BAD_REQUEST).json({
+        success: false,
+        message: errorMessage.User.INPUT_NOT_FOUND,
+      });
+    }
+
+    const updatedData = {
+      avatar: `/uploads/avatars/${req.file.filename}`,
+    };
+
+    const user = await userService.updateUser(id, updatedData);
+
+    res.status(status.SUCCESS).json({
+      success: true,
+      data: user,
+      message: userMessage.UPDATE_SUCCESS,
+    });
+  } catch (error: any) {
+    res.status(status.INTERNAL_SERVER_ERROR).json({
       success: false,
       error: error.message,
       message: errorMessage.General.UNKNOWN_ERROR,

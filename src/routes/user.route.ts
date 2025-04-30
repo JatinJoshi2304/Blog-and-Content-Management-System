@@ -3,6 +3,7 @@ import {
   updateUser,
   getUserByUsername,
   deleteUser,
+  updateProfilePic,
 } from "../controllers/user.controller";
 import { protectRoute } from "../middlewares/auth.middleware";
 import { updateUserValidation } from "../validator/user.validation";
@@ -16,7 +17,7 @@ router.use(protectRoute);
 // Routes
 router.put("/", updateUserValidation, updateUser);
 router.get("/:username", getUserByUsername);
-router.put("/profile", protectRoute, upload.single("avatar"), updateUser);
+router.put("/profile", protectRoute, upload.single("avatar"), updateProfilePic);
 router.delete("/:username", deleteUser);
 
 export default router;
