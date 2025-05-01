@@ -12,6 +12,14 @@ export const userMessage = {
   PROFILE_UPDATE_SUCCESS: "User profile updated successfully",
 };
 
+export const postMessage = {
+  FETCH_SUCCESS: "Post fetched successfully",
+  UPDATE_SUCCESS: "Post updated successfully",
+  DELETE_SUCCESS: "Post deleted successfully",
+  NOT_FOUND: "Post not found",
+  CREATE_SUCCESS: "Post created successfully",
+};
+
 export const errorMessage = {
   Auth: {
     INVALID_CREDENTIALS: "Invalid email or password",
