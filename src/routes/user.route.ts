@@ -8,16 +8,15 @@ import {
 import { protectRoute } from "../middlewares/auth.middleware";
 import { updateUserValidation } from "../validator/user.validation";
 import { upload } from "../middlewares/upload.middleware";
+import { validateRequest } from "../middlewares/validation.middleware";
 
 const router = express.Router();
 
-// Apply JWT protection to all routes below
 router.use(protectRoute);
 
-// Routes
-router.put("/", updateUserValidation, updateUser);
+router.put("/", updateUserValidation, validateRequest, updateUser);
 router.get("/:username", getUserByUsername);
-router.put("/profile", protectRoute, upload.single("avatar"), updateProfilePic);
+router.put("/profile", upload.single("avatar"), updateProfilePic);
 router.delete("/:username", deleteUser);
 
 export default router;
