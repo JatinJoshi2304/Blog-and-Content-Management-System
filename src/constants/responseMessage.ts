@@ -25,6 +25,7 @@ export const errorMessage = {
     EMAIL_EXISTS: "Email is already in use",
     VALIDATION_FAILED: "User data validation failed",
     PROFILE_UPDATE_FAILED: "Failed to update user profile",
+    INPUT_NOT_FOUND: "No image file uploaded",
   },
   Post: {
     NOT_FOUND: "Post not found",
@@ -61,5 +62,6 @@ export const errorMessage = {
     NOT_FOUND: "Resource not found",
     VALIDATION_FAILED: "Validation failed",
     DATABASE_ERROR: "A database error occurred",
+    UNAUTHORIZED: "Access denied. Admins only",
   },
 };

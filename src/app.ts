@@ -7,6 +7,7 @@ import { PrismaClient } from "@prisma/client";
 import morgan from "morgan";
 import authRoutes from "./routes/auth.route";
 import userRoutes from "./routes/user.route";
+import path from "path";
 // Load environment variables
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(morgan("dev"));
 app.get("/", (_req, res) => {
   res.status(200).json({ message: "Welcome to Blog CMS API 🚀" });
 });
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
 app.use("/api/v1/auth", authRoutes);

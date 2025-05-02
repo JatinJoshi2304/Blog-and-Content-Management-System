@@ -16,6 +16,9 @@ model User {
   role      Role?     @default(READER)
   bio       String?
   avatar    String?
+  twitter   String?
+  github    String?
+  linkedin  String?
   posts     Post[]
   comments  Comment[]
   createdAt DateTime  @default(now())
