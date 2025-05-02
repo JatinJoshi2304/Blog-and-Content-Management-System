@@ -1,7 +1,6 @@
-import { IUser } from "./user.interface";
 import { IComment } from "./comment.interface";
-import { Tag } from "./tag.interface";
-import { Category } from "./category.interface";
+import { ITag } from "./tag.interface";
+import { ICategory } from "./category.interface";
 
 export interface IPost {
   id: string;
@@ -11,8 +10,8 @@ export interface IPost {
   publishedAt?: Date | null;
   authorId: string;
   comments?: IComment[];
-  tags?: Tag[];
-  categories?: Category[];
+  tags?: ITag[];
+  categories?: ICategory[];
   createdAt: Date;
   updatedAt: Date;
 }

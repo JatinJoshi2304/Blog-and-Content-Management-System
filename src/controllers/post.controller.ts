@@ -7,6 +7,7 @@ export const createPost = async (req: Request, res: Response) => {
   try {
     const data = req.body;
     data.authorId = (req as any).user.id;
+    data.image = req.file ? `/uploads/posts/${req.file.filename}` : null;
 
     const result = await postService.createPost(data);
     res.status(status.CREATED).json({

@@ -12,7 +12,6 @@ import { createPostValidation } from "../validator/post.validation";
 const router = express.Router();
 router.use(protectRoute);
 
-router.post("/", createPostValidation, createPost);
 router.get("/", getAllPosts);
 router.get("/:id", getPostById);
 router.put("/:id", updatePost);
