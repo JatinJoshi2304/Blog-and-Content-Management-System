@@ -7,6 +7,9 @@ import { PrismaClient } from "@prisma/client";
 import morgan from "morgan";
 import authRoutes from "./routes/auth.route";
 import userRoutes from "./routes/user.route";
+import postRoutes from "./routes/post.route";
+import commentRoutes from "./routes/comment.route";
+import categoryRoutes from "./routes/category.route";
 import path from "path";
 // Load environment variables
 dotenv.config();
@@ -18,7 +21,11 @@ const app: Application = express();
 export const prisma = new PrismaClient();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
@@ -32,9 +39,9 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
-// app.use('/api/v1/posts', postRoutes);
-// app.use('/api/v1/comments', commentRoutes);
-// app.use('/api/v1/media', mediaRoutes);
+app.use("/api/v1/post", postRoutes);
+app.use("/api/v1/comment", commentRoutes);
+app.use("/api/v1/category", categoryRoutes);
 
 // Error handler middleware (can be improved later)
 app.use((err: any, _req: any, res: any, _next: any) => {

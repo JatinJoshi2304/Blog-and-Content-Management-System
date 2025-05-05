@@ -2,7 +2,8 @@ import { Request, response, Response } from "express";
 import * as userService from "../services/user.service";
 import { userMessage, errorMessage } from "../constants/responseMessage";
 import { status } from "../constants/responseStatus";
-import userErrorStatusCode from "../constants/errorCode.js";
+import { uploadImageToCloudinary } from "../services/upload.service";
+import userErrorStatusCode from "../constants/errorCode";
 
 export const getUserById = async (req: Request, res: Response) => {
   try {
@@ -36,7 +37,7 @@ export const getUserByUsername = async (req: Request, res: any) => {
     if (!user) {
       return res.status(status.NOT_FOUND).json({
         success: false,
-        code: userErrorStatusCode.USER_ERR_CODE_002,
+        code: userErrorStatusCode.USER_ERR_CODE_004,
         message: errorMessage.User.NOT_FOUND,
       });
     }
@@ -96,34 +97,28 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-export const updateProfilePic = async (req: Request, res: any) => {
+export const uploadImage = async (req: Request, res: any) => {
   try {
     const id = (req as any).user.id;
-
     if (!req.file) {
       return res.status(status.BAD_REQUEST).json({
         success: false,
-        code: userErrorStatusCode.USER_ERR_CODE_002,
-        message: errorMessage.User.INPUT_NOT_FOUND,
+        code: userErrorStatusCode.USER_ERR_CODE_008,
+        message: userMessage.PROFILE_AVATAR_UPDATE_FAILED,
       });
     }
 
-    const updatedData = {
-      avatar: `/uploads/avatars/${req.file.filename}`,
-    };
+    const imageUrl = await uploadImageToCloudinary(req.file.path);
 
-    const user = await userService.updateUser(id, updatedData);
-
-    res.status(status.SUCCESS).json({
-      success: true,
-      data: user,
-      message: userMessage.UPDATE_SUCCESS,
-    });
-  } catch (error: any) {
+    const updatedData = { avatar: imageUrl };
+    await userService.updateUser(id, updatedData);
+    res
+      .status(200)
+      .json({ success: true, message: userMessage.UPDATE_SUCCESS });
+  } catch (error) {
     res.status(status.INTERNAL_SERVER_ERROR).json({
       success: false,
       code: userErrorStatusCode.USER_ERR_CODE_002,
-      error: error.message,
       message: errorMessage.General.UNKNOWN_ERROR,
     });
   }
