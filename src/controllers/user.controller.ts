@@ -3,14 +3,17 @@ import * as userService from "../services/user.service";
 import { userMessage, errorMessage } from "../constants/responseMessage";
 import { status } from "../constants/responseStatus";
 import { uploadImageToCloudinary } from "../services/upload.service";
+import userErrorStatusCode from "../constants/errorCode";
 
 export const getUserById = async (req: Request, res: Response) => {
   try {
     const user = await userService.getUserById(req.params.id);
     if (!user) {
-      return res
-        .status(status.NOT_FOUND)
-        .json({ success: false, message: errorMessage.User.NOT_FOUND });
+      return res.status(status.NOT_FOUND).json({
+        success: false,
+        code: userErrorStatusCode.USER_ERR_CODE_004,
+        message: errorMessage.User.NOT_FOUND,
+      });
     }
     res.status(status.SUCCESS).json({
       success: true,
@@ -20,6 +23,7 @@ export const getUserById = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(status.INTERNAL_SERVER_ERROR).json({
       success: false,
+      code: userErrorStatusCode.USER_ERR_CODE_002,
       error: error.message,
       message: errorMessage.General.UNKNOWN_ERROR,
     });
@@ -31,9 +35,11 @@ export const getUserByUsername = async (req: Request, res: any) => {
     const username = req.params.username;
     const user = await userService.getUserByUsername(username);
     if (!user) {
-      return res
-        .status(status.NOT_FOUND)
-        .json({ success: false, message: errorMessage.User.NOT_FOUND });
+      return res.status(status.NOT_FOUND).json({
+        success: false,
+        code: userErrorStatusCode.USER_ERR_CODE_004,
+        message: errorMessage.User.NOT_FOUND,
+      });
     }
     res
       .status(status.SUCCESS)
@@ -41,6 +47,7 @@ export const getUserByUsername = async (req: Request, res: any) => {
   } catch (error: any) {
     res.status(status.INTERNAL_SERVER_ERROR).json({
       success: false,
+      code: userErrorStatusCode.USER_ERR_CODE_002,
       error: error.message,
       message: errorMessage.General.UNKNOWN_ERROR,
     });
@@ -54,6 +61,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
     if (role !== "admin")
       return res.status(status.UNAUTHORIZED).json({
         success: false,
+        code: userErrorStatusCode.USER_ERR_CODE_007,
         message: errorMessage.General.UNAUTHORIZED,
       });
 
@@ -64,6 +72,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(status.INTERNAL_SERVER_ERROR).json({
       success: false,
+      code: userErrorStatusCode.USER_ERR_CODE_002,
       error: error.message,
       message: errorMessage.General.UNKNOWN_ERROR,
     });
@@ -81,6 +90,7 @@ export const updateUser = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(status.BAD_REQUEST).json({
       success: false,
+      code: userErrorStatusCode.USER_ERR_CODE_002,
       error: error.message,
       message: errorMessage.General.UNKNOWN_ERROR,
     });
@@ -91,19 +101,26 @@ export const uploadImage = async (req: Request, res: any) => {
   try {
     const id = (req as any).user.id;
     if (!req.file) {
-      return res.status(400).json({ error: "No file uploaded" });
+      return res.status(status.BAD_REQUEST).json({
+        success: false,
+        code: userErrorStatusCode.USER_ERR_CODE_008,
+        message: userMessage.PROFILE_AVATAR_UPDATE_FAILED,
+      });
     }
-    console.log("Check 1");
+
     const imageUrl = await uploadImageToCloudinary(req.file.path);
 
-    console.log("Check 1");
     const updatedData = { avatar: imageUrl };
     await userService.updateUser(id, updatedData);
     res
       .status(200)
       .json({ success: true, message: userMessage.UPDATE_SUCCESS });
   } catch (error) {
-    res.status(500).json({ error: "Upload failed", details: "message" });
+    res.status(status.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      code: userErrorStatusCode.USER_ERR_CODE_002,
+      message: errorMessage.General.UNKNOWN_ERROR,
+    });
   }
 };
 
@@ -117,6 +134,7 @@ export const deleteUser = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(status.INTERNAL_SERVER_ERROR).json({
       success: false,
+      code: userErrorStatusCode.USER_ERR_CODE_002,
       error: error.message,
       message: errorMessage.General.UNKNOWN_ERROR,
     });
