@@ -1,26 +1,27 @@
-import multer from "multer";
+// src/middleware/multer.ts
+import multer, { FileFilterCallback } from "multer";
 import path from "path";
-import { v4 as uuidv4 } from "uuid";
-
-// Set storage destination and filename
+import { Request } from "express";
 const storage = multer.diskStorage({
-  destination: function (_req, _file, cb) {
-    cb(null, "src/uploads/avatars"); // store in this folder
-  },
-  filename: function (_req, file, cb) {
-    const ext = path.extname(file.originalname);
-    cb(null, uuidv4() + ext); // unique filename
+  filename: (req, file, cb) => {
+    const uniqueName = `${Date.now()}${path.extname(file.originalname)}`;
+    cb(null, uniqueName);
   },
 });
 
-// File type validation
-const fileFilter = (_req: any, file: any, cb: any) => {
-  const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
-  if (allowedTypes.includes(file.mimetype)) {
+//validate file type
+const fileFilter = (
+  req: Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback
+) => {
+  if (file.mimetype.startsWith("image/")) {
     cb(null, true);
   } else {
-    cb(new Error("Only .png, .jpg and .jpeg format allowed!"), false);
+    cb(new Error("Only images are allowed"));
   }
 };
 
-export const upload = multer({ storage, fileFilter });
+const upload = multer({ storage, fileFilter });
+
+export default upload;
