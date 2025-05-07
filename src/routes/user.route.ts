@@ -8,6 +8,8 @@ import {
 import { protectRoute } from "../middlewares/auth.middleware";
 import { updateUserValidation } from "../validator/user.validation";
 import upload from "../middlewares/upload.middleware";
+import { validateRequest } from "../middlewares/validation.middleware";
+import { getUserById } from "../controllers/user.controller";
 
 const router = express.Router();
 
@@ -15,7 +17,7 @@ const router = express.Router();
 router.use(protectRoute);
 
 // Routes
-router.put("/", updateUserValidation, updateUser);
+router.put("/", updateUserValidation, validateRequest, updateUser);
 router.get("/:username", getUserByUsername);
 router.put("/uploadProfile", upload.single("avatar"), uploadImage);
 

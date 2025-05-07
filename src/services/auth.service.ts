@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Role } from "@prisma/client";
 import { hashPassword, comparePassword } from "../utils/hash";
 import { generateToken } from "../utils/jwt";
 import { LoginInput, SignupInput } from "../Interfaces/auth.interface";
@@ -10,10 +10,15 @@ export const signupUser = async (data: SignupInput) => {
     where: { email: data.email },
   });
   if (existing) throw new Error("User already exists");
-
+  const userRole = data.role.toUpperCase();
   const hashedPassword = await hashPassword(data.password);
   const user = await prisma.user.create({
-    data: { ...data, password: hashedPassword },
+    data: {
+      email: data.email,
+      password: hashedPassword,
+      username: data.username,
+      role: userRole as Role,
+    },
   });
 
   const token = generateToken(user.id);
