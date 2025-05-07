@@ -10,6 +10,7 @@ export const userMessage = {
   EMAIL_ALREADY_EXISTS: "Email is already registered",
   PROFILE_FETCH_SUCCESS: "User profile fetched successfully",
   PROFILE_UPDATE_SUCCESS: "User profile updated successfully",
+  PROFILE_AVATAR_UPDATE_FAILED: "Failed to update profile avatar",
 };
 
 export const postMessage = {
