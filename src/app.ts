@@ -8,7 +8,7 @@ import morgan from "morgan";
 import authRoutes from "./routes/auth.route";
 import userRoutes from "./routes/user.route";
 import postRoutes from "./routes/post.route";
-import commentRoutes from "./routes/comment.route";
+// import commentRoutes from "./routes/comment.route";
 import path from "path";
 // Load environment variables
 dotenv.config();
@@ -35,7 +35,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/post", postRoutes);
-app.use("/api/v1/comment", commentRoutes);
+// app.use("/api/v1/comment", commentRoutes);
 // app.use('/api/v1/media', mediaRoutes);
 
 // Error handler middleware (can be improved later)
