@@ -3,6 +3,8 @@ import * as postService from "../services/post.service";
 import { status } from "../constants/responseStatus";
 import { errorMessage, postMessage } from "../constants/responseMessage";
 import { postErrorCode } from "../constants/errorCode";
+import fs from "fs";
+import cloudinary from "../utils/cloudinary";
 
 export const createPost = async (req: Request, res: Response) => {
   try {
@@ -90,31 +92,48 @@ export const updatePost = async (req: Request, res: Response) => {
 };
 
 export const updateThumbnail = async (req: Request, res: any) => {
-  try {
-    const id = (req as any).user.id;
-    const postId = req.params.id;
-    if (!req.file) {
-      return res.status(status.BAD_REQUEST).json({
-        success: false,
-        status: status.BAD_REQUEST,
-        message: errorMessage.User.INPUT_NOT_FOUND,
-      });
-    }
+  const userId = (req as any).user.id;
+  const postId = req.params.id;
 
+  if (!req.file) {
+    return res.status(status.BAD_REQUEST).json({
+      success: false,
+      status: status.BAD_REQUEST,
+      message: errorMessage.User.INPUT_NOT_FOUND,
+    });
+  }
+
+  const localFilePath = req.file.path;
+
+  try {
+    // Upload to Cloudinary
+    const result = await cloudinary.uploader.upload(localFilePath, {
+      folder: "thumbnails",
+    });
+
+    // Clean up local file after upload
+    fs.unlinkSync(localFilePath);
+
+    // Save Cloudinary URL in DB
     const updatedData = {
-      thumbnail: `/uploads/thumbnail/${req.file.filename}`,
+      thumbnail: result.secure_url,
     };
 
-    const user = await postService.updatePost(id, updatedData);
+    const updatedPost = await postService.updatePost(postId, updatedData);
 
-    res.status(status.SUCCESS).json({
+    return res.status(status.SUCCESS).json({
       success: true,
-      status: status.BAD_REQUEST,
-      data: user,
+      status: status.SUCCESS,
+      data: updatedPost,
       message: postMessage.UPDATE_SUCCESS,
     });
   } catch (error: any) {
-    res.status(status.INTERNAL_SERVER_ERROR).json({
+    // Clean up temp file if upload or DB fails
+    if (fs.existsSync(localFilePath)) {
+      fs.unlinkSync(localFilePath);
+    }
+
+    return res.status(status.INTERNAL_SERVER_ERROR).json({
       success: false,
       status: status.INTERNAL_SERVER_ERROR,
       code: postErrorCode.POST_ERR_CODE_002,
