@@ -27,4 +27,18 @@ export const postErrorCode = {
   POST_ERR_CODE_006: "POST_ERR_CODE_006", // Invalid Credentials
 };
 
-export default { authErrorCode, userErrorCode, postErrorCode };
+export const categoryErrorCode = {
+  CATEGORY_ERR_CODE_001: "CATEGORY_ERR_CODE_001", // Generic validation error
+  CATEGORY_ERR_CODE_002: "CATEGORY_ERR_CODE_002", // Internal server error
+  CATEGORY_ERR_CODE_003: "CATEGORY_ERR_CODE_003", // Duplicate title
+  CATEGORY_ERR_CODE_004: "CATEGORY_ERR_CODE_004", // not found
+  CATEGORY_ERR_CODE_005: "CATEGORY_ERR_CODE_005", // DB fetch error
+  CATEGORY_ERR_CODE_006: "CATEGORY_ERR_CODE_006", // Invalid Credentials
+};
+
+export default {
+  authErrorCode,
+  userErrorCode,
+  postErrorCode,
+  categoryErrorCode,
+};
