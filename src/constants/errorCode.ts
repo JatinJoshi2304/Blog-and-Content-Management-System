@@ -36,9 +36,19 @@ export const categoryErrorCode = {
   CATEGORY_ERR_CODE_006: "CATEGORY_ERR_CODE_006", // Invalid Credentials
 };
 
+export const commentErrorCode = {
+  COMMENT_ERR_CODE_001: "COMMENT_ERR_CODE_001", // Generic validation error
+  COMMENT_ERR_CODE_002: "COMMENT_ERR_CODE_002", // Internal server error
+  COMMENT_ERR_CODE_003: "COMMENT_ERR_CODE_003", // Duplicate title
+  COMMENT_ERR_CODE_004: "COMMENT_ERR_CODE_004", // not found
+  COMMENT_ERR_CODE_005: "COMMENT_ERR_CODE_005", // DB fetch error
+  COMMENT_ERR_CODE_006: "COMMENT_ERR_CODE_006", // Invalid Credentials
+};
+
 export default {
   authErrorCode,
   userErrorCode,
   postErrorCode,
   categoryErrorCode,
+  commentErrorCode,
 };

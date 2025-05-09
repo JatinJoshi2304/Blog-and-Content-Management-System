@@ -29,6 +29,14 @@ export const categoryMessage = {
   CREATE_SUCCESS: "Category created successfully",
 };
 
+export const commentMessage = {
+  FETCH_SUCCESS: "Comment fetched successfully",
+  UPDATE_SUCCESS: "Comment updated successfully",
+  DELETE_SUCCESS: "Comment deleted successfully",
+  NOT_FOUND: "Comment not found",
+  CREATE_SUCCESS: "Comment created successfully",
+};
+
 export const errorMessage = {
   Auth: {
     INVALID_CREDENTIALS: "Invalid email or password",
