@@ -3,11 +3,12 @@ import * as categoryService from "../services/category.service";
 import { status } from "../constants/responseStatus";
 import { errorMessage, categoryMessage } from "../constants/responseMessage";
 import { categoryErrorCode } from "../constants/errorCode";
+import { ICategoryRequest } from "../interfaces/category.interface";
 
-export const createCategory = async (req: Request, res: Response) => {
+export const createCategory = async (req: ICategoryRequest, res: Response) => {
   try {
     const data = req.body;
-    const userId = (req as any).user.id;
+    const userId = req.user.id;
 
     const result = await categoryService.createCategory(userId, data);
     res.status(status.CREATED).json({
