@@ -130,13 +130,11 @@ export const uploadImage = async (req: Request, res: any) => {
 
     const updatedData = { avatar: imageUrl };
     await userService.updateUser(id, updatedData);
-    res
-      .status(200)
-      .json({
-        success: true,
-        status: status.BAD_REQUEST,
-        message: userMessage.UPDATE_SUCCESS,
-      });
+    res.status(200).json({
+      success: true,
+      status: status.BAD_REQUEST,
+      message: userMessage.UPDATE_SUCCESS,
+    });
   } catch (error) {
     res.status(status.INTERNAL_SERVER_ERROR).json({
       success: false,

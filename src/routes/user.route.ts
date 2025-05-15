@@ -20,7 +20,6 @@ router.use(protectRoute);
 router.put("/", updateUserValidation, validateRequest, updateUser);
 router.get("/:username", getUserByUsername);
 router.put("/uploadProfile", upload.single("avatar"), uploadImage);
-
 router.delete("/:username", deleteUser);
 
 export default router;

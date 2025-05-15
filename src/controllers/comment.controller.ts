@@ -4,9 +4,11 @@ import { status } from "../constants/responseStatus";
 import { errorMessage, commentMessage } from "../constants/responseMessage";
 import { commentErrorCode } from "../constants/errorCode";
 import { ICommentRequest } from "../interfaces/comment.interface";
+import { LikeType } from "@prisma/client";
 
-export const createComment = async (req: ICommentRequest, res: Response) => {
+export const createComment = async (req: ICommentRequest, res: any) => {
   try {
+    console.log("Create Comment");
     const data = req.body;
     const userId = req.user.id;
     const postId = req.params.id;
@@ -16,6 +18,7 @@ export const createComment = async (req: ICommentRequest, res: Response) => {
       null,
       data
     );
+
     res.status(status.CREATED).json({
       success: true,
       statusCode: status.CREATED,
@@ -33,8 +36,9 @@ export const createComment = async (req: ICommentRequest, res: Response) => {
   }
 };
 
-export const replyComment = async (req: ICommentRequest, res: Response) => {
+export const replyComment = async (req: ICommentRequest, res: any) => {
   try {
+    console.log(req.user);
     const data = req.body;
     const userId = req.user.id;
     const postId = req.params.id;
@@ -65,6 +69,7 @@ export const replyComment = async (req: ICommentRequest, res: Response) => {
 
 export const getAllComments = async (req: Request, res: Response) => {
   try {
+    console.log("Get Comment");
     const postId = req.params.id;
     const result = await commentService.getAllComments(postId);
     res.status(status.SUCCESS).json({
@@ -84,8 +89,11 @@ export const getAllComments = async (req: Request, res: Response) => {
   }
 };
 
-export const updateComment = async (req: ICommentRequest, res: Response) => {
+export const updateComment = async (req: ICommentRequest, res: any) => {
   try {
+    console.log("Update Comment");
+    console.log(req.user);
+    console.log(req.body);
     const commentId = req.params.id;
     const userId = req.user.id;
     const data = req.body;
@@ -107,7 +115,40 @@ export const updateComment = async (req: ICommentRequest, res: Response) => {
   }
 };
 
-export const deleteComment = async (req: ICommentRequest, res: Response) => {
+export const handleCommentLike = async (req: ICommentRequest, res: any) => {
+  console.log("Like Comment");
+  const commentId = req.params.id;
+  const type = req.body.type;
+  const userId = req.user.id;
+  if (type && !["LIKE", "DISLIKE"].includes(type)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid like type. Must be LIKE or DISLIKE",
+    });
+  }
+
+  try {
+    const result = await commentService.likeOrDislikeComment(
+      userId,
+      commentId,
+      type as LikeType
+    );
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error: any) {
+    res.status(status.BAD_REQUEST).json({
+      success: false,
+      status: status.BAD_REQUEST,
+      errorCode: commentErrorCode.COMMENT_ERR_CODE_002,
+      error: error.message,
+      message: errorMessage.General.BAD_REQUEST,
+    });
+  }
+};
+
+export const deleteComment = async (req: ICommentRequest, res: any) => {
   try {
     const commentId = req.params.id;
     const userId = req.user.id;

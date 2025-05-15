@@ -1,5 +1,5 @@
 import { PrismaClient, Post } from "@prisma/client";
-import { ICategory } from "../Interfaces/category.interface";
+import { ICategory } from "../interfaces/category.interface";
 import { categoryErrorCode } from "../constants/errorCode";
 
 const prisma = new PrismaClient();

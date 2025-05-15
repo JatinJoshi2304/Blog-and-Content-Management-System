@@ -5,7 +5,7 @@ import { errorMessage, categoryMessage } from "../constants/responseMessage";
 import { categoryErrorCode } from "../constants/errorCode";
 import { ICategoryRequest } from "../interfaces/category.interface";
 
-export const createCategory = async (req: ICategoryRequest, res: Response) => {
+export const createCategory = async (req: ICategoryRequest, res: any) => {
   try {
     const data = req.body;
     const userId = req.user.id;

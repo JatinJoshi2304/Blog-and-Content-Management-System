@@ -3,7 +3,7 @@ import * as authService from "../services/auth.service";
 import { status } from "../constants/responseStatus";
 import { userMessage } from "../constants/responseMessage";
 import { errorMessage } from "../constants/responseMessage";
-import { LoginInput, SignupInput } from "../Interfaces/auth.interface";
+import { LoginInput, SignupInput } from "../interfaces/auth.interface";
 import { authErrorCode } from "../constants/errorCode";
 
 export const signup = async (req: Request<SignupInput>, res: any) => {

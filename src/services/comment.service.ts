@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { LikeType, PrismaClient } from "@prisma/client";
 import { IComment } from "../interfaces/comment.interface";
 
 const prisma = new PrismaClient();
@@ -50,6 +50,58 @@ export const updateComment = async (
   });
 
   return { comment };
+};
+
+export const likeOrDislikeComment = async (
+  userId: string,
+  id: string,
+  type: LikeType
+) => {
+  try {
+    const comment = await prisma.comment.findUnique({
+      where: { id },
+    });
+    if (!comment) {
+      throw {
+        message: "Comment not found",
+        status: 404,
+      };
+    }
+
+    const existing = await prisma.commentLike.findUnique({
+      where: { id, userId: userId },
+    });
+
+    if (existing) {
+      if (existing.type === type) {
+        await prisma.commentLike.delete({
+          where: { id, userId: userId },
+        });
+        return { message: "Like/dislike removed" };
+      }
+
+      await prisma.commentLike.update({
+        where: { userId, id },
+        data: {
+          type,
+        },
+      });
+
+      return { message: `Comment ${type.toLowerCase()}d` };
+    }
+    const commentId = comment.id;
+    await prisma.commentLike.create({
+      data: {
+        userId,
+        commentId,
+        type,
+      },
+    });
+
+    return { message: `Comment ${type.toLowerCase()}d` };
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const deleteComment = async (commentId: string, userId: string) => {

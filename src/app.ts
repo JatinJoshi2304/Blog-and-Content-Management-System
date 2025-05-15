@@ -11,7 +11,10 @@ import postRoutes from "./routes/post.route";
 import categoryRoutes from "./routes/category.route";
 import commentRoutes from "./routes/comment.route";
 import path from "path";
+// import dotenv from "dotenv-flow";
 // Load environment variables
+
+// dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 dotenv.config();
 
 // Initialize Express app

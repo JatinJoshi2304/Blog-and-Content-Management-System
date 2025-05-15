@@ -1,5 +1,5 @@
 import { PrismaClient, Post } from "@prisma/client";
-import { IPost } from "../Interfaces/post.interface";
+import { IPost } from "../interfaces/post.interface";
 
 const prisma = new PrismaClient();
 
@@ -11,7 +11,6 @@ export const createPost = async (id: string, data: IPost) => {
   if (existing) {
     throw new Error("Title already exists");
   }
-
   const post = await prisma.post.create({
     data: {
       title: data.title,

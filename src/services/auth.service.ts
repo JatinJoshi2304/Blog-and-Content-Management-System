@@ -1,7 +1,7 @@
 import { PrismaClient, Role } from "@prisma/client";
 import { hashPassword, comparePassword } from "../utils/hash";
 import { generateToken } from "../utils/jwt";
-import { LoginInput, SignupInput } from "../Interfaces/auth.interface";
+import { LoginInput, SignupInput } from "../interfaces/auth.interface";
 
 const prisma = new PrismaClient();
 
